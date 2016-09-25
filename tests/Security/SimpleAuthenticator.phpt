@@ -4,32 +4,32 @@
  * Test: Nette\Security\SimpleAuthenticator
  */
 
-use Nette\Security\SimpleAuthenticator,
-	Tester\Assert;
+use Nette\Security\SimpleAuthenticator;
+use Tester\Assert;
 
 
 require __DIR__ . '/../bootstrap.php';
 
 
-$users = array(
+$users = [
 	'john' => 'password123!',
 	'admin' => 'admin',
-);
+];
 
 $authenticator = new SimpleAuthenticator($users);
 
-$identity = $authenticator->authenticate(array('john', 'password123!'));
-Assert::type( 'Nette\Security\IIdentity', $identity );
+$identity = $authenticator->authenticate(['john', 'password123!']);
+Assert::type(Nette\Security\IIdentity::class, $identity);
 Assert::equal('john', $identity->getId());
 
-$identity = $authenticator->authenticate(array('admin', 'admin'));
-Assert::type( 'Nette\Security\IIdentity', $identity );
+$identity = $authenticator->authenticate(['admin', 'admin']);
+Assert::type(Nette\Security\IIdentity::class, $identity);
 Assert::equal('admin', $identity->getId());
 
-Assert::exception(function() use ($authenticator) {
-	$authenticator->authenticate(array('admin', 'wrong password'));
-}, 'Nette\Security\AuthenticationException', 'Invalid password.');
+Assert::exception(function () use ($authenticator) {
+	$authenticator->authenticate(['admin', 'wrong password']);
+}, Nette\Security\AuthenticationException::class, 'Invalid password.');
 
-Assert::exception(function() use ($authenticator) {
-	$authenticator->authenticate(array('nobody', 'password'));
-}, 'Nette\Security\AuthenticationException', "User 'nobody' not found.");
+Assert::exception(function () use ($authenticator) {
+	$authenticator->authenticate(['nobody', 'password']);
+}, Nette\Security\AuthenticationException::class, "User 'nobody' not found.");
